@@ -15,8 +15,8 @@
 
 ## Список отчётов
 
-* [**Лабораторная работа №1:** A01:2021 — Broken Access Control / RCE (Command Injection)](./attacks/A01_Command_Injection.md)
-  * *Ключевой фокус:* Почему POST-атаки не видны в `access.log` Apache и как Sysmon ловит выполнение шелла через `EventID 1`.
+* [**Отчёт №1:** A03:2021 — Injection / RCE (Command Injection)](./attacks/A03_Command_Injection.md)
+  * *Ключевой фокус:* Почему POST-атаки полностью скрыты в легитимном `access.log` Apache и как Sysmon перехватывает выполнение несанкционированных команд на уровне ядра ОС через `EventID 1`.
   
-* [**Лабораторная работа №2:** A03:2021 — Injection (SQLi to Web Shell / RCE)](./attacks/A03_SQL_Injection_RCE.md)
-  * *Ключевой фокус:* Отслеживание создания файлов процессом СУБД с помощью Sysmon `EventID 11` и дефект легитимных логов.
+* [**Отчёт №2:** A01:2021 — Broken Access Control / Web Shell (File Upload)](./attacks/A01_Broken_Access_Control.md)
+  * *Ключевой фокус:* Детектирование загрузки бэкдора «вслепую» через сетевой поток, анализ ошибки 500 сервера Apache и построение аналитических фильтров в Wazuh по техникам матрицы MITRE ATT&CK (`T1505.003`).
