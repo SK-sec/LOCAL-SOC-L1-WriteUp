@@ -19,7 +19,7 @@ curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=hostname"
 
 **Результат:** Сервер ответил `nt authority\система` и хостом `WIN-EGFO6580PJF` (Apache запущен от `SYSTEM`).
 
-![Успешный вызов веб-шелла](png/a01_kali_exploit.png)
+![Успешный вызов веб-шелла](../png/a01_kali_exploit.png)
 
 ## 2. Анализ логов сервера
 
@@ -34,7 +34,7 @@ curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=hostname"
 * **Image:** `cmd.exe /s /c "whoami"`
 * **Пользователь:** `NT AUTHORITY\СИСТЕМА`
 
-![Телеметрия процессов Sysmon](png/a01_sysmon_event.png)
+![Телеметрия процессов Sysmon](../png/a01_sysmon_event.png)
 
 ### Этап Б (Тюнинг Wazuh):
 Правило `92052` дополнено кастомным правилом **`100201`** (Level 12) с привязкой к MITRE ATT&CK `T1059.003` и `T1505.003`.
@@ -53,7 +53,7 @@ curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=hostname"
 </group>
 ```
 
-![Алерт веб-шелла в Wazuh](png/a01_wazuh_alert.png)
+![Алерт веб-шелла в Wazuh](../png/a01_wazuh_alert.png)
 
 ## 4. Автоматическое сдерживание (Shuffle SOAR)
 
@@ -61,7 +61,7 @@ curl -s "http://\${IP}/hackable/uploads/shell.php?cmd=hostname"
 * **Воркфлоу (`Win-A01-Quarantine`):** При срабатывании `rule.id: 100201` Shuffle подключается по SSH, переносит `.php` файлы из `C:\xampp\htdocs\hackable\uploads\` в `C:\quarantine` и собирает процессы `httpd.exe`.
 * **Проверка:** Повторный запрос к веб-шеллу через 5 секунд вернул **`HTTP/1.1 404 Not Found`**.
 
-![Shuffle отработал](png/a01_shuffle_quarantine.png)
+![Shuffle отработал](../png/a01_shuffle_quarantine.png)
 
 ## Рекомендации по защите
 1. Отключить выполнение PHP в папке `uploads` (`php_flag engine off`).
