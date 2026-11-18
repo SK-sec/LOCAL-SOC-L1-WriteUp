@@ -1,22 +1,26 @@
-# Локальный стенд: Симуляция и обнаружение атак 
+# Локальный стенд: Симуляция, детектирование и реагирование на веб-атаки (SOC L1)
 
-Привет! В этом репозитории я собираю свои отчеты по симуляции веб-атак на локальном стенде и их анализу с помощью **Sysmon для Linux + Wazuh SIEM**.
+Привет! В этом репозитории я собираю свои практические отчёты по симуляции веб-атак (OWASP Top 10) на локальном стенде, их расследованию через **Sysmon + Wazuh SIEM** и автоматическому сдерживанию с помощью **Shuffle SOAR**.
 
----
+## 1. Архитектура стенда
 
-## 1. Архитектура моего стенда
+Инфраструктура развёрнута на одном хосте и объединяет **WSL2** и виртуальную машину **Hyper-V**:
 
-Все крутится на одном хосте Windows в изолированных дистрибутивах **WSL2** (сеть настроена в режиме `mirrored` для удобства):
-1. **Атакующий (`kali-linux`)** — отсюда я запускаю `curl` и бью по мишени.
-2. **Жертва (`victim`)** — веб-стек Apache2 + MariaDB + PHP. На нем развернут DVWA. Также тут крутится агент Wazuh и Sysmon for Linux.
-3. **Аналитика (`analytics`)** — сервер Wazuh (SIEM), который собирает все алерты.
+1. **Атакующий (`kali-linux`, WSL2)** — генерация вредоносного трафика и эксплуатация уязвимостей (`curl`).
+2. **Жертва Linux (`victim`, WSL2)** — стек LAMP (Apache2 + MariaDB + PHP) с уязвимым приложением DVWA, агент Wazuh и Sysmon for Linux.
+3. **Жертва Windows (`win-victim`, Hyper-V)** — Windows Server 2019 (Server Core), стек XAMPP (Apache + PHP) с DVWA, агент Wazuh и Windows Sysmon.
+4. **Аналитика и реагирование (`analytics`, WSL2)** — Wazuh Manager (SIEM) для корреляции событий и Shuffle (SOAR) для автоматической изоляции угроз.
 
----
+## 2. Список отчётов
 
-## Список отчётов
+### Linux-инфраструктура (Ubuntu / LAMP)
+* **Отчёт №1:** [A03:2021 — Command Injection (Linux)](attacks/A03_Command_Injection_Lin.md)
+  * *Ключевой фокус:* Скрытость POST-инъекций в `access.log`, перехват дочерних процессов через Sysmon for Linux (EventID 1) и автоматическая блокировка атакующего IP по Threat Intelligence через `iptables`.
+* **Отчёт №2:** [A01:2021 — Broken Access Control / Web Shell (Linux)](attacks/A01_Broken_Access_Control_Lin.md)
+  * *Ключевой фокус:* Детектирование загрузки бэкдора, тюнинг правил Wazuh по матрице MITRE ATT&CK (`T1505.003`) и карантин вредоносных файлов через Shuffle SOAR.
 
-* [**Отчёт №1:** A03:2021 — Injection / RCE (Command Injection)](./attacks/A03_Command_Injection.md)
-  * *Ключевой фокус:* Почему POST-атаки полностью скрыты в легитимном `access.log` Apache и как Sysmon перехватывает выполнение несанкционированных команд на уровне ядра ОС через `EventID 1`.
-  
-* [**Отчёт №2:** A01:2021 — Broken Access Control / Web Shell (File Upload)](./attacks/A01_Broken_Access_Control.md)
-  * *Ключевой фокус:* Детектирование загрузки бэкдора «вслепую» через сетевой поток, анализ ошибки 500 сервера Apache и построение аналитических фильтров в Wazuh по техникам матрицы MITRE ATT&CK (`T1505.003`).
+### Windows-инфраструктура (Windows Server 2019 / XAMPP)
+* **Отчёт №3:** [A01:2021 — Broken Access Control / Web Shell (Windows)](attacks/A01_Broken_Access_Control_Win.md)
+  * *Ключевой фокус:* Эксплуатация загрузки файлов в Windows с привилегиями `NT AUTHORITY\SYSTEM`, создание кастомного правила Wazuh (`100201`) поверх Sysmon и перемещение веб-шелла в карантин по SSH.
+* **Отчёт №4:** [A03:2021 — Command Injection (Windows)](attacks/A03_Command_Injection_Win.md)
+  * *Ключевой фокус:* Инъекция системных команд (`&`), анализ цепочки `httpd.exe -> cmd.exe` и автоматическая блокировка атакующего IP из Tor-фида в Windows Firewall.
