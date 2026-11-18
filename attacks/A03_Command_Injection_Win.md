@@ -41,12 +41,12 @@ curl -s -X POST \
 
 **Логика скрипта реагирования (`C:\security\soar_block.ps1`):**
 ```powershell
-\$line = (Get-Content 'C:\xampp\apache\logs\access.log' | Select-String 'POST .*exec' | Select-Object -Last 1).ToString()
-ip = line.Split(' ')
+$line = (Get-Content 'C:\xampp\apache\logs\access.log' | Select-String 'POST .*exec' | Select-Object -Last 1).ToString()
+$ip = $line.Split(' ')[0]
 
-if (Select-String -Path 'C:\security\ti_blacklist.txt' -Pattern "^ip" -Quiet) {
-    New-NetFirewallRule -DisplayName "SOAR_Block_\$ip" -Direction Inbound -RemoteAddress \$ip -Action Block -ErrorAction SilentlyContinue | Out-Null
-    Write-Output "ACTION: IP \$ip blocked via Windows Firewall"
+if (Select-String -Path 'C:\security\ti_blacklist.txt' -Pattern "^$ip" -Quiet) {
+    New-NetFirewallRule -DisplayName "SOAR_Block_$ip" -Direction Inbound -RemoteAddress $ip -Action Block -ErrorAction SilentlyContinue | Out-Null
+    Write-Output "ACTION: IP $ip blocked via Windows Firewall"
 }
 ```
 
